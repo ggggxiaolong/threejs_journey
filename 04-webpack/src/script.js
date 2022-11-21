@@ -17,9 +17,32 @@ scene.add(mesh);
 // scene.add(axesHelper);
 
 const size = {
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
 };
+
+window.addEventListener("resize", () => {
+  size.width = window.innerWidth;
+  size.height = window.innerHeight;
+
+  camera.aspect = size.width / size.height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(size.width, size.height);
+});
+
+window.addEventListener("dblclick", () => {
+  if (!document.fullscreenElement) {
+    canvas.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+
+  if (document.webkitFullscreenElement) {
+    canvas.webkitRequestFullscreen();
+  } else {
+    document.webkitExitFullscreen();
+  }
+});
 
 // const aspectRatio = size.width / size.height
 // const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, 1, -1, 0.1, 100)
@@ -30,6 +53,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 );
+
 camera.position.z = 3;
 // camera.position.x = 2;
 // camera.position.y = 2;
