@@ -7,8 +7,20 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 const canvas = document.querySelector(".webgl");
 const scene = new THREE.Scene();
 
-const geometry = new THREE.BoxGeometry(1, 1, 1, 5, 5, 5);
-const material = new THREE.MeshBasicMaterial({ color: "red" });
+// const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
+const geometry = new THREE.BufferGeometry();
+const trianglesCount = 500;
+const pointSize = trianglesCount * 3 * 3;
+
+const vertices = new Float32Array(pointSize);
+
+for (let i = 0; i < pointSize; i++) {
+  vertices[i] = Math.random() - 0.5;
+}
+
+geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+
+const material = new THREE.MeshBasicMaterial({ color: "red", wireframe: true });
 const mesh = new THREE.Mesh(geometry, material);
 // mesh.position.set(0.7, -0.6, 1);
 scene.add(mesh);
