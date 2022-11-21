@@ -2,28 +2,37 @@ import "./style.css";
 import * as THREE from "three";
 import gsap from "gsap";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import * as dat from "dat.gui";
 
 // console.log(gsap)
+const gui = new dat.GUI();
+
 const canvas = document.querySelector(".webgl");
 const scene = new THREE.Scene();
 
-// const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
-const geometry = new THREE.BufferGeometry();
-const trianglesCount = 500;
-const pointSize = trianglesCount * 3 * 3;
+const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-const vertices = new Float32Array(pointSize);
-
-for (let i = 0; i < pointSize; i++) {
-  vertices[i] = Math.random() - 0.5;
-}
-
-geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
-
-const material = new THREE.MeshBasicMaterial({ color: "red", wireframe: true });
+const parameters = {
+  color: "#ff0000",
+  spin: function () {
+    gsap.to(mesh.rotation, { duration: 1, y: mesh.rotation.y + Math.PI * 2 });
+  },
+};
+const material = new THREE.MeshBasicMaterial({color: parameters.color});
 const mesh = new THREE.Mesh(geometry, material);
 // mesh.position.set(0.7, -0.6, 1);
 scene.add(mesh);
+
+/**
+ * debug
+ */
+gui.add(mesh.position, "y", -3, 3, 0.01).name("elevation");
+gui.add(mesh, "visible");
+gui.add(material, "wireframe");
+gui.add(parameters, "spin")
+gui.addColor(parameters, "color").onChange(() => {
+  material.color.set(parameters.color);
+});
 
 // const axesHelper = new THREE.AxesHelper();
 // scene.add(axesHelper);
@@ -42,19 +51,19 @@ window.addEventListener("resize", () => {
   renderer.setSize(size.width, size.height);
 });
 
-window.addEventListener("dblclick", () => {
-  if (!document.fullscreenElement) {
-    canvas.requestFullscreen();
-  } else {
-    document.exitFullscreen();
-  }
+// window.addEventListener("dblclick", () => {
+//   if (!document.fullscreenElement) {
+//     canvas.requestFullscreen();
+//   } else {
+//     document.exitFullscreen();
+//   }
 
-  if (document.webkitFullscreenElement) {
-    canvas.webkitRequestFullscreen();
-  } else {
-    document.webkitExitFullscreen();
-  }
-});
+//   if (document.webkitFullscreenElement) {
+//     canvas.webkitRequestFullscreen();
+//   } else {
+//     document.webkitExitFullscreen();
+//   }
+// });
 
 // const aspectRatio = size.width / size.height
 // const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, 1, -1, 0.1, 100)
