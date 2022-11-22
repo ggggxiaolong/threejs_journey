@@ -1,41 +1,70 @@
 import "./style.css";
 import * as THREE from "three";
-import gsap from "gsap";
+// import gsap from "gsap";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import * as dat from "dat.gui";
+// import * as dat from "dat.gui";
 
 // console.log(gsap)
-const gui = new dat.GUI();
+// const gui = new dat.GUI();
 
 const canvas = document.querySelector(".webgl");
 const scene = new THREE.Scene();
 
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-const parameters = {
-  color: "#ff0000",
-  spin: function () {
-    gsap.to(mesh.rotation, { duration: 1, y: mesh.rotation.y + Math.PI * 2 });
-  },
-};
-const material = new THREE.MeshBasicMaterial({color: parameters.color});
+// load manger
+const loadManager = new THREE.LoadingManager();
+// loadManager.onStart = function () {
+//   console.log("onStart");
+// };
+// loadManager.onLoad = function () {
+//   console.log("OnLoad");
+// };
+// loadManager.onProgress = function (url, itemsLoaded, itemsTotal) {
+//   console.log(
+//     "Loading file: " +
+//       url +
+//       ".\nLoaded " +
+//       itemsLoaded +
+//       " of " +
+//       itemsTotal +
+//       " files."
+//   );
+// };
+
+// loadManager.onError = function (url) {
+//   console.log("error loading " + url);
+// };
+
+const loader = new THREE.TextureLoader(loadManager);
+// const texture = loader.load("/textures/door/color.jpg");
+// const texture = loader.load("/textures/checkerboard-8x8.png");
+const texture = loader.load("/textures/minecraft.png");
+// repeat wrap rotation
+
+// texture.repeat.x = 2
+// texture.repeat.y = 3
+// texture.wrapS = THREE.MirroredRepeatWrapping
+// texture.wrapT = THREE.MirroredRepeatWrapping
+
+// texture.offset.x = 0.5
+// texture.offset.y = 0.5
+
+// texture.rotation = Math.PI * 0.25
+// texture.center.x = 0.5
+// texture.center.y = 0.5
+
+// mipmapping 当nimFilter使用NearestFilter时关闭generateMipmaps可以提高性能
+texture.generateMipmaps = false
+texture.minFilter = THREE.NearestFilter
+
+
+texture.magFilter = THREE.NearestFilter
+
+const material = new THREE.MeshBasicMaterial({ map: texture });
 const mesh = new THREE.Mesh(geometry, material);
 // mesh.position.set(0.7, -0.6, 1);
 scene.add(mesh);
-
-/**
- * debug
- */
-gui.add(mesh.position, "y", -3, 3, 0.01).name("elevation");
-gui.add(mesh, "visible");
-gui.add(material, "wireframe");
-gui.add(parameters, "spin")
-gui.addColor(parameters, "color").onChange(() => {
-  material.color.set(parameters.color);
-});
-
-// const axesHelper = new THREE.AxesHelper();
-// scene.add(axesHelper);
 
 const size = {
   width: window.innerWidth,
@@ -50,23 +79,6 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
   renderer.setSize(size.width, size.height);
 });
-
-// window.addEventListener("dblclick", () => {
-//   if (!document.fullscreenElement) {
-//     canvas.requestFullscreen();
-//   } else {
-//     document.exitFullscreen();
-//   }
-
-//   if (document.webkitFullscreenElement) {
-//     canvas.webkitRequestFullscreen();
-//   } else {
-//     document.webkitExitFullscreen();
-//   }
-// });
-
-// const aspectRatio = size.width / size.height
-// const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, 1, -1, 0.1, 100)
 
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -86,15 +98,10 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(size.width, size.height);
 
-// const clock = new THREE.Clock();
-// gsap.to(mesh.position, {x: 2, duration: 1, delay: 1});
-// gsap.to(mesh.position, {x: 1, duration: 1, delay: 2});
-
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 
 function tick() {
-  // mesh.rotation.y = clock.getElapsedTime();
   controls.update();
 
   renderer.render(scene, camera);
