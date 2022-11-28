@@ -13,3 +13,7 @@ Matcap资源
 
 1. https://polyhaven.com/
 2. 处理： https://matheowis.github.io/HDRI-to-CubeMap
+
+### 粒子
+
+1. https://kenney.nl/assets/particle-pack
