@@ -1,100 +1,180 @@
 import "./style.css";
 import * as THREE from "three";
 import gsap from "gsap";
-// import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as dat from "dat.gui";
+import * as CANNON from "cannon-es";
 
 const gui = new dat.GUI();
 const canvas = document.querySelector(".webgl");
 const scene = new THREE.Scene();
 
-// scroll alpha
-// mesh
-// gui color
-const params = {};
+/**
+ * Physic world
+ */
 
-params.count = 200;
-// params.size = 0.02
-params.color = "#FB7299";
-params.fullHeight = 4;
-params.currentSection = 0;
-params.oldSection = 0;
-params.scrollY = 0
+const defaultMaterial = new CANNON.Material("default");
 
-gui.addColor(params, "color").onChange(() => {
-  material.color.set(params.color);
-  pointsMaterial.color.set(params.color);
-});
-
-const loader = new THREE.TextureLoader();
-const alphaTexture = loader.load("/textures/gradients/5.jpg");
-alphaTexture.magFilter = THREE.NearestFilter;
-
-const material = new THREE.MeshToonMaterial({
-  color: params.color,
-  gradientMap: alphaTexture,
-});
-const mesh1 = new THREE.Mesh(new THREE.TorusGeometry(1, 0.4, 16, 60), material);
-
-const mesh2 = new THREE.Mesh(new THREE.ConeGeometry(1, 2, 32), material);
-
-const mesh3 = new THREE.Mesh(
-  new THREE.TorusKnotGeometry(1, 0.35, 100, 16),
-  material
+const defaultContactMaterial = new CANNON.ContactMaterial(
+  defaultMaterial,
+  defaultMaterial,
+  {
+    friction: 0.1,
+    restitution: 0.7,
+  }
 );
-mesh2.position.y = -params.fullHeight;
-mesh3.position.y = -params.fullHeight * 2;
-
-mesh1.position.x = 2
-mesh2.position.x = -2
-mesh3.position.x = 2
-
-scene.add(mesh1, mesh2, mesh3);
-const meshes = [mesh1, mesh2, mesh3];
-
-const pointsGeometry = new THREE.BufferGeometry();
-const pointsMaterial = new THREE.PointsMaterial({
-  size: 0.03,
-  color: params.color,
+const world = new CANNON.World({
+  allowSleep: true,
+  gravity: new CANNON.Vec3(0, -9.82, 0),
+  defaultMaterial: defaultMaterial,
+  defaultContactMaterial: defaultContactMaterial,
 });
+// physicWorld.broadphase = new CANNON.SAPBroadphase(physicWorld)
+// physicWorld.addContactMaterial(defaultContactMaterial);
+world.defaultContactMaterial = defaultContactMaterial;
 
-const positions = new Float32Array(params.count * 3);
+const sphereShape = new CANNON.Sphere(0.5);
+const sphearBody = new CANNON.Body({
+  mass: 1,
+  position: new CANNON.Vec3(0, 4, 0),
+  shape: sphereShape,
+});
+sphearBody.addEventListener("collide", playSound);
+// sphearBody.applyLocalForce(
+//   new CANNON.Vec3(50, 0, 0),
+//   new CANNON.Vec3(0, 0, 0)
+// );
+world.addBody(sphearBody);
 
-for (let i = 0; i < params.count; i++) {
-  let i3 = i * 3;
-  positions[i3] = THREE.MathUtils.randFloatSpread(10);
-  positions[i3 + 1] = THREE.MathUtils.randFloatSpread(
-    params.fullHeight * meshes.length
-  );
-  positions[i3 + 2] = THREE.MathUtils.randFloatSpread(10);
+const planeShape = new CANNON.Plane();
+const planeBody = new CANNON.Body({
+  mass: 0,
+  shape: planeShape,
+});
+planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5);
+world.addBody(planeBody);
+// console.log(planeBody.position);
+
+const params = {};
+// const loader = new THREE.TextureLoader();
+
+const hitSound = new Audio("/sounds/hit.mp3");
+
+function playSound(collision) {
+  const strength = collision.contact.getImpactVelocityAlongNormal();
+  if (strength > 1.5) {
+    hitSound.volume = Math.random();
+    hitSound.currentTime = 0;
+    hitSound.play();
+  }
 }
-pointsGeometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3))
-const points = new THREE.Points(pointsGeometry, pointsMaterial)
-scene.add(points)
 
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(1, 1, 0);
+const mesh = new THREE.Mesh(
+  new THREE.SphereGeometry(0.5, 16, 16),
+  new THREE.MeshStandardMaterial()
+);
+mesh.position.y = 4;
+mesh.castShadow = true;
+scene.add(mesh);
+
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(10, 10),
+  new THREE.MeshStandardMaterial({
+    color: "#777777",
+  })
+);
+floor.rotation.x = -Math.PI * 0.5;
+floor.receiveShadow = true;
+scene.add(floor);
+
+const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+const sphereMaterial = new THREE.MeshStandardMaterial();
+
+const addedObjects = [{ mesh: mesh, body: sphearBody }];
+
+function addSphere(radius, position) {
+  const mesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+  mesh.position.copy(position);
+  mesh.scale.set(radius, radius, radius);
+  mesh.castShadow = true;
+  scene.add(mesh);
+
+  const body = new CANNON.Body({
+    shape: new CANNON.Sphere(radius),
+    position: new CANNON.Vec3(0, 4, 0),
+    mass: 1,
+  });
+  body.position.copy(position);
+  body.addEventListener("collide", playSound);
+  world.addBody(body);
+
+  addedObjects.push({ mesh: mesh, body });
+}
+
+const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+
+function addBox(width, height, depth, position) {
+  const mesh = new THREE.Mesh(boxGeometry, sphereMaterial);
+  mesh.castShadow = true;
+  mesh.scale.set(width, height, depth);
+  mesh.position.copy(position);
+  scene.add(mesh);
+
+  const shape = new CANNON.Box(
+    new CANNON.Vec3(width / 2, height / 2, depth / 2)
+  );
+  const body = new CANNON.Body({
+    mass: 1,
+    shape: shape,
+    position: new CANNON.Vec3(0, 4, 0),
+  });
+  body.position.copy(position);
+  body.addEventListener("collide", playSound);
+  world.addBody(body);
+
+  addedObjects.push({ mesh: mesh, body: body });
+}
+
+params.addBox = function () {
+  addBox(Math.random(), Math.random(), Math.random(), {
+    x: THREE.MathUtils.randFloatSpread(4),
+    y: 4,
+    z: THREE.MathUtils.randFloatSpread(3),
+  });
+};
+params.addSphere = function () {
+  addSphere(Math.random(), {
+    x: THREE.MathUtils.randFloatSpread(4),
+    y: 4,
+    z: THREE.MathUtils.randFloatSpread(3),
+  });
+};
+params.reset = function () {
+  for (const obj of addedObjects) {
+    obj.body.removeEventListener("collide", playSound);
+    world.removeBody(obj.body);
+    scene.remove(obj.mesh);
+  }
+};
+
+gui.add(params, "addBox");
+gui.add(params, "addSphere");
+gui.add(params, "reset");
+
+//light
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+scene.add(ambientLight);
+
+const light = new THREE.DirectionalLight(0xffffff, 0.2);
+light.position.set(5, 2, 0);
+light.castShadow = true;
+light.shadow.camera.far = 10;
 scene.add(light);
-
 
 const size = {
   width: window.innerWidth,
   height: window.innerHeight,
 };
-
-const mouse = {};
-mouse.x = 0;
-mouse.y = 0;
-
-window.addEventListener("scroll", () => {
-  params.scrollY = window.scrollY
-  params.currentSection = Math.round(window.scrollY / size.height)
-});
-
-window.addEventListener("mousemove", (event) => {
-  mouse.x = event.clientX / size.width - 0.5;
-  mouse.y = event.clientY / size.height - 0.5;
-});
 
 window.addEventListener("resize", () => {
   size.width = window.innerWidth;
@@ -106,25 +186,23 @@ window.addEventListener("resize", () => {
 });
 
 const camera = new THREE.PerspectiveCamera(
-  35,
+  75,
   size.width / size.height,
   0.1,
   100
 );
-
-const cameraGroup = new THREE.Group();
-scene.add(cameraGroup);
-camera.position.set(0, 0, 6);
-cameraGroup.add(camera);
+camera.position.set(0, 6, 9);
+scene.add(camera);
 
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 });
 renderer.setSize(size.width, size.height);
+renderer.shadowMap.enabled = true;
 // renderer.setClearAlpha(0)
 
-// const controls = new OrbitControls(camera, canvas);
-// controls.enableDamping = true;
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
 
 const clock = new THREE.Clock();
 let lastTime = 0;
@@ -133,32 +211,14 @@ function tick() {
   const elapsedTime = clock.getElapsedTime();
   const deltaTime = elapsedTime - lastTime;
   lastTime = elapsedTime;
-
-  for (const mesh of meshes) {
-    mesh.rotation.x += deltaTime * 0.5;
-    mesh.rotation.y += deltaTime * 0.5;
+  world.step(1 / 60, deltaTime, 3);
+  mesh.position.copy(sphearBody.position);
+  for (const obj of addedObjects) {
+    obj.mesh.position.copy(obj.body.position);
+    obj.mesh.quaternion.copy(obj.body.quaternion);
   }
 
-  const parallaxX = mouse.x;
-  const parallaxY = -mouse.y;
-
-  cameraGroup.position.x +=
-    (parallaxX - cameraGroup.position.x) * 2.5 * deltaTime;
-  cameraGroup.position.y +=
-    (parallaxY - cameraGroup.position.y) * 2.5 * deltaTime;
-  camera.position.y = -params.scrollY / size.height * params.fullHeight;
-
-  if(params.currentSection != params.oldSection){
-    params.oldSection = params.currentSection
-    gsap.to(meshes[params.currentSection].rotation, {
-      duration: 1.5,
-      ease: "power2.inOut",
-      x:"+=6",
-      y:"+=3",
-      z:"+=1.5"
-    })
-  }
-
+  controls.update();
   renderer.render(scene, camera);
   window.requestAnimationFrame(tick);
 }

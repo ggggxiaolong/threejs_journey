@@ -10,10 +10,10 @@ body {
     outline: none;
 }
 
-/* html, body{
+html, body{
     overflow: hidden;
-} */
-
+}
+/* 
 html {
     background: #1e1a20;
 }
@@ -33,4 +33,4 @@ html {
 
 .section:nth-child(odd){
     justify-content: flex-end;
-}
+} */
