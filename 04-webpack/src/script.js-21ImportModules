@@ -4,19 +4,30 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
-// import * as dat from "dat.gui";
+import { AnimationMixer } from "three";
+import * as dat from "dat.gui";
 // import * as CANNON from "cannon-es";
 
-// const gui = new dat.GUI();
+const gui = new dat.GUI();
 const canvas = document.querySelector(".webgl");
 const scene = new THREE.Scene();
 
+const params = {}
+let model = null;
+let mixer = null;
+let previousAction = null;
 const glTFLoader = new GLTFLoader();
 const darcoLoader = new DRACOLoader();
 darcoLoader.setDecoderPath("/libs/draco/");
 glTFLoader.setDRACOLoader(darcoLoader);
-glTFLoader.load("/models/hamburge.glb", (model) => {
-  model.scene.scale.set(0.3, 0.3, 0.3)
+glTFLoader.load("/models/Fox/glTF/Fox.gltf", (gltf) => {
+  model = gltf;
+  mixer = new THREE.AnimationMixer(model.scene);
+  console.log(model);
+  const action = mixer.clipAction(model.animations[2]);
+  previousAction = action
+  action.play();
+  model.scene.scale.set(0.025, 0.025, 0.025);
   scene.add(model.scene);
 });
 
@@ -28,6 +39,36 @@ const floor = new THREE.Mesh(
 );
 floor.rotation.x = -Math.PI * 0.5;
 scene.add(floor);
+
+function fadeToAction(index = 0, duration = 0.2) {
+  if (mixer) {
+    let animation = model.animations[index];
+    const action = mixer.clipAction(animation);
+    if (previousAction != null && previousAction != action) {
+      previousAction.fadeOut(duration).stop();
+    }
+    previousAction = action;
+    action
+      .reset()
+      .setEffectiveTimeScale(1)
+      .setEffectiveWeight(1)
+      .fadeIn(1)
+      .play();
+  }
+}
+
+params.animationSurvey = function(){
+  fadeToAction(0)
+}
+params.animationWalk = function(){
+  fadeToAction(1)
+}
+params.animationRun = function(){
+  fadeToAction(2)
+}
+gui.add(params, "animationSurvey")
+gui.add(params, "animationWalk")
+gui.add(params, "animationRun")
 
 //light
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
@@ -76,8 +117,12 @@ const clock = new THREE.Clock();
 let lastTime = 0;
 
 function tick() {
-  // const elapsedTime = clock.getElapsedTime();
-  // const deltaTime = elapsedTime - lastTime;
+  const elapsedTime = clock.getElapsedTime();
+  const deltaTime = elapsedTime - lastTime;
+  lastTime = elapsedTime;
+  if (mixer) {
+    mixer.update(deltaTime);
+  }
 
   controls.update();
   renderer.render(scene, camera);
