@@ -1,18 +1,23 @@
 import "./style.css";
 import {
+  AdditiveBlending,
+  BufferAttribute,
+  BufferGeometry,
   Clock,
   Color,
   Mesh,
   PerspectiveCamera,
   PlaneGeometry,
+  Points,
+  PointsMaterial,
   Scene,
   ShaderMaterial,
   Vector2,
   WebGLRenderer,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import vertexShader from "./shaders/vertex.glsl";
-import fragmentShader from "./shaders/fragment.glsl";
+import vertexShader from "./shaders/galaxy/vertex.glsl";
+import fragmentShader from "./shaders/galaxy/fragment.glsl";
 import { GUI } from "dat.gui";
 
 const size = {
@@ -26,55 +31,70 @@ const scene = new Scene();
 const gui = new GUI();
 const params = {};
 
-params.depthColor = "#186691";
-params.surfaceColor = "#9bd8ff";
+params.size = 0.01;
+params.count = 100000;
 
+const geometry = new BufferGeometry();
 const material = new ShaderMaterial({
+  // size: params.size,
+  depthWrite: false,
+  vertexColors: true,
+  blending: AdditiveBlending,
   vertexShader: vertexShader,
   fragmentShader: fragmentShader,
-  uniforms: {
-    uColor: { value: new Color("#ff00ff") },
-    uTime: {value: 0},
-    uDepthColor: { value: new Color(params.depthColor)},
-    uSurfaceColor: { value: new Color(params.surfaceColor)},
-    uColorOffset: {value: 0.08},
-    uColorMultiplier: {value: 5},
-    uBigWaveFrequency: { value: new Vector2(4, 1.5)},
-    uBigWaveSpeed: { value: 0.75},
-    uBigWaveElevation: { value: 0.2},
-    uSmallWaveElevation: { value: 0.145},
-    uSmallWaveFrequency: { value: 4.2},
-    uSmallWaveSpeed: { value: 0.7},
-    uSmallWaveIterations: { value: 4},
-  },
+  uniforms:{
+    uSize: {value: 8.0 * size.pixelRatio},
+    uTime: {value: 0.0},
+  }
 });
 
+params.branch = 3;
+params.radius = 3;
+params.power = 3;
+params.randomness = 0.2;
 
-gui.add(material.uniforms.uBigWaveElevation, "value", 0, 5, 0.01).name("uBigWaveElevation");
-gui.add(material.uniforms.uBigWaveFrequency.value, "x", 0, 5, 0.01).name("bigWaveFrequencyX");
-gui.add(material.uniforms.uBigWaveFrequency.value, "y", 0, 5, 0.01).name("bigWaveFrequencyY");
-gui.add(material.uniforms.uBigWaveSpeed, "value", 0, 5, 0.01).name("uBigWaveSpeed");
+const positions = new Float32Array(params.count * 3);
+const randomPosition = new Float32Array(params.count * 3);
+const colors = new Float32Array(params.count * 3);
+const scales = new Float32Array(params.count);
+const innerColor = new Color("#ff6030")
+const outsideColor = new Color("#1b3984")
+for (let i = 0; i < params.count; i++) {
+  const i3 = i * 3;
+  const angle = (((i % params.branch) * Math.PI) / 3) * 2;
+  const radius = Math.random() * params.radius;
 
-gui.add(material.uniforms.uSmallWaveElevation, "value", 0, 5, 0.01).name("uSmallWaveElevation");
-gui.add(material.uniforms.uSmallWaveFrequency, "value", 0, 5, 0.01).name("uSmallWaveFrequency");
-gui.add(material.uniforms.uSmallWaveSpeed, "value", 0, 5, 0.01).name("uSmallWaveSpeed");
-gui.add(material.uniforms.uSmallWaveIterations, "value", 0, 5, 1).name("uSmallWaveIterations");
+  const randomX = Math.pow(Math.random(), params.power) * (Math.random() > 0.5 ? 1 : -1) * params.randomness * radius;
+  const randomY = Math.pow(Math.random(), params.power) * (Math.random() > 0.5 ? 1 : -1) * params.randomness * radius;
+  const randomZ = Math.pow(Math.random(), params.power) * (Math.random() > 0.5 ? 1 : -1) * params.randomness * radius;
 
-gui.addColor(params, "depthColor").onChange(()=>{
-  material.uniforms.uDepthColor.value.set(params.depthColor)
-})
-gui.addColor(params, "surfaceColor").onChange(()=>{
-  material.uniforms.uSurfaceColor.value.set(params.surfaceColor)
-})
-gui.add(material.uniforms.uColorOffset, "value", 0, 5, 0.01).name("uColorOffset");
-gui.add(material.uniforms.uColorMultiplier, "value", 0, 5, 1).name("uColorMultiplier");
 
-const geometry = new PlaneGeometry(2, 2, 128, 128);
-const flagMesh = new Mesh(geometry, material);
-scene.add(flagMesh);
+  positions[i3] = Math.cos(angle) * radius;
+  positions[i3 + 1] = 0.0;
+  positions[i3 + 2] = Math.sin(angle) * radius;
+
+  randomPosition[i3] = randomX;
+  randomPosition[i3 + 1] =  randomY;
+  randomPosition[i3 + 2] = randomZ;
+
+  const mixColor = innerColor.clone()
+  mixColor.lerp(outsideColor, radius / params.radius);
+  colors[i3] = mixColor.r;
+  colors[i3 + 1] = mixColor.g;
+  colors[i3 + 2] = mixColor.b;
+
+  scales[i] = Math.random();
+}
+geometry.setAttribute("position", new BufferAttribute(positions, 3));
+geometry.setAttribute("color", new BufferAttribute(colors, 3));
+geometry.setAttribute("aRandom", new BufferAttribute(randomPosition, 3));
+geometry.setAttribute("aScale", new BufferAttribute(scales, 1));
+
+const points = new Points(geometry, material);
+scene.add(points);
 
 const camera = new PerspectiveCamera(75, size.width / size.height, 0.01, 100);
-camera.position.set(0, 0, 2);
+camera.position.set(-1, 2, 4);
 scene.add(camera);
 const render = new WebGLRenderer({ canvas: canvas, antialias: true });
 render.setSize(size.width, size.height);
@@ -93,14 +113,16 @@ window.addEventListener("resize", () => {
   render.setPixelRatio(size.devicePixelRatio);
   camera.aspect = size.width / size.height;
   camera.updateProjectionMatrix();
+
+  material.uniforms.uSize.value = 8.0 * size.pixelRatio;
 });
 
-const clock = new Clock()
+const clock = new Clock();
 
 function update() {
-  render.render(scene, camera);
-  controls.update()
   material.uniforms.uTime.value = clock.getElapsedTime();
+  render.render(scene, camera);
+  controls.update();
   window.requestAnimationFrame(update);
 }
 update();
