@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Size } from "./model";
+import { GUI } from "lil-gui";
 
 let renderer: THREE.WebGLRenderer;
 let camera: THREE.PerspectiveCamera;
@@ -9,6 +10,8 @@ let size: Size;
 let spotLight: THREE.SpotLight;
 let cylinder: THREE.Mesh;
 let floor: THREE.Mesh;
+let control: OrbitControls;
+let gui: GUI;
 
 init();
 addMesh();
@@ -17,6 +20,7 @@ initShadow();
 render();
 
 function init() {
+  gui = new GUI();
   size = new Size();
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(size.width, size.height);
@@ -29,11 +33,11 @@ function init() {
   camera.lookAt(0, 0, 0);
   scene.add(camera);
 
-  //   const axiesHelper = new THREE.AxesHelper(10);
-  //   scene.add(axiesHelper);
+  const axiesHelper = new THREE.AxesHelper(20);
+  scene.add(axiesHelper);
 
-  //   const control = new OrbitControls(camera, renderer.domElement);
-  //   control.addEventListener("change",render)
+  control = new OrbitControls(camera, renderer.domElement);
+  // control.addEventListener("change", render);
 }
 
 function addMesh() {
@@ -57,6 +61,21 @@ function initLight() {
   spotLight = new THREE.SpotLight(0xffffff, 1, 500, Math.PI / 6, 0.1);
   spotLight.position.set(-50, 80, 0);
   scene.add(spotLight);
+
+  const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+  scene.add(spotLightHelper);
+
+  const lightFolder = gui.addFolder("spot light");
+  lightFolder.addColor(spotLight, "color");
+  lightFolder.add(spotLight, "intensity", 0, 1)
+  lightFolder.add(spotLight, "angle", 0, Math.PI/2).onChange(function(){
+    spotLightHelper.update()
+  })
+  lightFolder.add(spotLight, "penumbra", 0, 1);
+  const cameraFolder = gui.addFolder('camera');
+  cameraFolder.add(camera.position, "x", -1000, 1000);
+  cameraFolder.add(camera.position, "y", -1000, 1000);
+  cameraFolder.add(camera.position, "z", -1000, 1000);
 }
 
 function initShadow() {
@@ -68,12 +87,13 @@ function initShadow() {
 
 function render() {
   renderer.render(scene, camera);
+  control.update();
+  requestAnimationFrame(render);
 }
 
-
-window.addEventListener("resize", function(){
-  size.onResize()
+window.addEventListener("resize", function () {
+  size.onResize();
   camera.aspect = size.aspect;
   camera.updateProjectionMatrix();
   renderer.setSize(size.width, size.height);
-})
+});
