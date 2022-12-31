@@ -4,4 +4,5 @@ import './style.css'
 // import "./03-helper-gui"
 // import "./04-raycast"
 // import "./05-oimoPhysics"
-import "./06-shadowmap-viewer"
+// import "./06-shadowmap-viewer"
+import "./07-animation"
