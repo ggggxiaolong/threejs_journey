@@ -3,4 +3,5 @@ import './style.css'
 // import "./02-sport-light"
 // import "./03-helper-gui"
 // import "./04-raycast"
-import "./05-oimoPhysics"
+// import "./05-oimoPhysics"
+import "./06-shadowmap-viewer"
