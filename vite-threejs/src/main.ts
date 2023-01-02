@@ -7,4 +7,5 @@ import './style.css'
 // import "./06-shadowmap-viewer"
 // import "./07-animation"
 // import "./08-load-glb"
-import "./09-littlest-tokyo"
+// import "./09-littlest-tokyo"
+import "./10-clipping"
