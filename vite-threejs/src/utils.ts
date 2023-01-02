@@ -14,7 +14,7 @@ export namespace Util {
   }
 
   export function initRenderer(size: Size): THREE.WebGLRenderer {
-    const renderer = new THREE.WebGLRenderer();
+    const renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setSize(size.width, size.height);
     renderer.setPixelRatio(size.pixelRatio);
     document.body.appendChild(renderer.domElement)
