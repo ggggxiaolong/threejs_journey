@@ -7,7 +7,7 @@ import { Size } from "./model";
 let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
 let renderer: THREE.WebGLRenderer;
-let size: Size;
+const size = Size.getInstance();
 let controler: OrbitControls;
 let dirLight: THREE.DirectionalLight;
 let spotLight: THREE.SpotLight;
@@ -27,7 +27,6 @@ render();
 
 function init() {
   gui = new GUI();
-  size = new Size();
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x333333);
   camera = new THREE.PerspectiveCamera(60, size.aspect, 0.1, 100);
@@ -141,8 +140,7 @@ function render() {
   requestAnimationFrame(render);
 }
 
-window.addEventListener("resize", function () {
-  size.onResize();
+size.onResise(function () {
   camera.aspect = size.aspect;
   camera.updateProjectionMatrix();
   renderer.setSize(size.width, size.height);

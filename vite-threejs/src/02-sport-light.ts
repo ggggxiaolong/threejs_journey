@@ -5,7 +5,7 @@ import { Size } from "./model";
 let renderer: THREE.WebGLRenderer;
 let camera: THREE.PerspectiveCamera;
 let scene: THREE.Scene;
-let size: Size;
+const size = Size.getInstance();
 let spotLight: THREE.SpotLight;
 let cylinder: THREE.Mesh;
 let floor: THREE.Mesh;
@@ -17,7 +17,6 @@ initShadow();
 render();
 
 function init() {
-  size = new Size();
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(size.width, size.height);
   renderer.setPixelRatio(size.pixelRatio);
@@ -34,6 +33,11 @@ function init() {
 
   //   const control = new OrbitControls(camera, renderer.domElement);
   //   control.addEventListener("change",render)
+  size.onResise(function () {
+    camera.aspect = size.aspect;
+    camera.updateProjectionMatrix();
+    renderer.setSize(size.width, size.height);
+  });
 }
 
 function addMesh() {
@@ -69,11 +73,3 @@ function initShadow() {
 function render() {
   renderer.render(scene, camera);
 }
-
-
-window.addEventListener("resize", function(){
-  size.onResize()
-  camera.aspect = size.aspect;
-  camera.updateProjectionMatrix();
-  renderer.setSize(size.width, size.height);
-})

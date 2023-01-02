@@ -6,7 +6,7 @@ import { GUI } from "lil-gui";
 let renderer: THREE.WebGLRenderer;
 let camera: THREE.PerspectiveCamera;
 let scene: THREE.Scene;
-let size: Size;
+const size = Size.getInstance();
 let spotLight: THREE.SpotLight;
 let cylinder: THREE.Mesh;
 let floor: THREE.Mesh;
@@ -21,7 +21,6 @@ render();
 
 function init() {
   gui = new GUI();
-  size = new Size();
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(size.width, size.height);
   renderer.setPixelRatio(size.pixelRatio);
@@ -91,8 +90,7 @@ function render() {
   requestAnimationFrame(render);
 }
 
-window.addEventListener("resize", function () {
-  size.onResize();
+size.onResise(function () {
   camera.aspect = size.aspect;
   camera.updateProjectionMatrix();
   renderer.setSize(size.width, size.height);

@@ -8,7 +8,7 @@ let camer: THREE.PerspectiveCamera;
 let renderer: THREE.WebGLRenderer;
 let light: THREE.HemisphereLight;
 let control: OrbitControls;
-let size: Size;
+const size = Size.getInstance();
 let mesh: THREE.InstancedMesh;
 // let axiesHelper: AxesHelper;
 let mouse: THREE.Vector2;
@@ -27,7 +27,6 @@ render();
 function init() {
   counterElement = document.querySelector("div.count");
   mouse = new THREE.Vector2(1, 1);
-  size = new Size();
   raycaste = new THREE.Raycaster();
   scene = new THREE.Scene();
   camer = new THREE.PerspectiveCamera(30, size.aspect, 0.1, 1000);
@@ -86,8 +85,7 @@ function render() {
   requestAnimationFrame(render);
 }
 
-window.addEventListener("resize", function () {
-  size.onResize();
+size.onResise(function () {
   camer.aspect = size.aspect;
   camer.updateProjectionMatrix();
   renderer.setSize(size.width, size.height);

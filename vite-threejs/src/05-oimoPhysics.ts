@@ -3,7 +3,7 @@ import { Size } from "./model";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { OimoPhysics, OimoPhysicsMete } from "three/examples/jsm/physics/OimoPhysics";
 
-let size: Size;
+const size = Size.getInstance();
 let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
 let control: OrbitControls;
@@ -24,7 +24,6 @@ await addPhysics();
 render();
 
 function init() {
-  size = new Size();
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x888888);
   camera = new THREE.PerspectiveCamera(50, size.aspect, 0.1, 100);

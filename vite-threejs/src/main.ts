@@ -8,4 +8,5 @@ import './style.css'
 // import "./07-animation"
 // import "./08-load-glb"
 // import "./09-littlest-tokyo"
-import "./10-clipping"
+// import "./10-clipping"
+import "./12-skybox";
