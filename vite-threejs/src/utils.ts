@@ -28,7 +28,7 @@ export namespace Util {
     return new THREE.PerspectiveCamera(fov, size.aspect, 0.1, 100);
   }
 
-  export function addAxeisHelper(
+  export function addAxesHelper(
     scene: THREE.Scene,
     size: number = 1
   ): THREE.AxesHelper {

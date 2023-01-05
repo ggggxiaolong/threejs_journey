@@ -1,4 +1,4 @@
-body{
+body {
   margin: 0;
 }
 
@@ -6,4 +6,10 @@ div.count {
   position: absolute;
   color: white;
   padding: 10px;
+}
+
+.label {
+  text-shadow: -1px 1px 1px rgb(0, 0, 0);
+  margin-left: 25px;
+  font-size: 20px;
 }

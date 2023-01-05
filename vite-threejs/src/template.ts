@@ -13,8 +13,8 @@ render();
 
 function init() {
     camera.position.set(0, 2, 2);
-    Util.addAxeisHelper(scene, 1)
-    size.onResise(function(){
+    Util.addAxesHelper(scene, 1)
+    size.onResize(function(){
         Util.onResize(size, camera, renderer);
     })
 }

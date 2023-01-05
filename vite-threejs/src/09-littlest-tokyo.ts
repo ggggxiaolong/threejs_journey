@@ -27,7 +27,7 @@ function init() {
   camera.position.set(0, 4, 9);
   renderer.outputEncoding = THREE.sRGBEncoding;
   // Util.addAxeisHelper(scene, 1);
-  size.onResise(function () {
+  size.onResize(function () {
     Util.onResize(size, camera, renderer);
   });
   const deccoder = new DRACOLoader();

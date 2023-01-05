@@ -85,7 +85,7 @@ function render() {
   requestAnimationFrame(render);
 }
 
-size.onResise(function () {
+size.onResize(function () {
   camer.aspect = size.aspect;
   camer.updateProjectionMatrix();
   renderer.setSize(size.width, size.height);

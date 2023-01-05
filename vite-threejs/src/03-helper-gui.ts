@@ -90,7 +90,7 @@ function render() {
   requestAnimationFrame(render);
 }
 
-size.onResise(function () {
+size.onResize(function () {
   camera.aspect = size.aspect;
   camera.updateProjectionMatrix();
   renderer.setSize(size.width, size.height);

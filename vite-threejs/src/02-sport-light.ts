@@ -33,7 +33,7 @@ function init() {
 
   //   const control = new OrbitControls(camera, renderer.domElement);
   //   control.addEventListener("change",render)
-  size.onResise(function () {
+  size.onResize(function () {
     camera.aspect = size.aspect;
     camera.updateProjectionMatrix();
     renderer.setSize(size.width, size.height);

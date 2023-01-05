@@ -29,7 +29,7 @@ export class Size {
     this.pixelRatio = Math.min(2, window.devicePixelRatio);
     this.aspect = this.width / this.height;
   }
-  public onResise(onChange: () => void) {
+  public onResize(onChange: () => void) {
     this.onChange = onChange;
   }
 }

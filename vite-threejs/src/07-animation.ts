@@ -18,10 +18,10 @@ function init() {
   scene = new THREE.Scene();
   camera = Util.initCamera(size);
   camera.position.set(5, 25, 25);
-  Util.addAxeisHelper(scene, 10);
+  Util.addAxesHelper(scene, 10);
   renderer = Util.initRenderer(size);
   Util.initControl(camera, renderer);
-  size.onResise(function () {
+  size.onResize(function () {
     Util.onResize(size, camera, renderer);
   });
 

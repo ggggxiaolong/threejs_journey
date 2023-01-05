@@ -20,7 +20,7 @@ render();
 function init() {
   camera.position.set(-1, 1, 4);
   // Util.addAxeisHelper(scene);
-  size.onResise(function () {
+  size.onResize(function () {
     Util.onResize(size, camera, renderer);
   });
   const envLight = new THREE.AmbientLight(0xffffff, 0.6);

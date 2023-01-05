@@ -18,8 +18,8 @@ function init() {
   // renderer.outputEncoding = THREE.sRGBEncoding;
   scene.background = new THREE.Color(0x999999);
   camera.position.set(0, 3, 4);
-  Util.addAxeisHelper(scene, 1);
-  size.onResise(function () {
+  Util.addAxesHelper(scene, 1);
+  size.onResize(function () {
     Util.onResize(size, camera, renderer);
   });
   material = new THREE.MeshPhongMaterial({ color: 0x80ee10, shininess: 100, side: THREE.DoubleSide });

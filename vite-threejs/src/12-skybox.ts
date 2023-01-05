@@ -15,7 +15,7 @@ let mesh: THREE.InstancedMesh;
 
 init();
 render();
-size.onResise(function () {
+size.onResize(function () {
   Util.onResize(size, camera, renderer);
 });
 
