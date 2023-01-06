@@ -1,6 +1,7 @@
 import { Size } from "./model";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import {TrackballControls} from "three/examples/jsm/controls/TrackballControls"
 
 export namespace Util {
   export function onResize(
@@ -25,7 +26,7 @@ export namespace Util {
     size: Size,
     fov: number = 50
   ): THREE.PerspectiveCamera {
-    return new THREE.PerspectiveCamera(fov, size.aspect, 0.1, 100);
+    return new THREE.PerspectiveCamera(fov, size.aspect, 0.1, 1000);
   }
 
   export function addAxesHelper(
@@ -43,6 +44,15 @@ export namespace Util {
   ): OrbitControls {
     const control =  new OrbitControls(camera, renderer.domElement);
     control.enableDamping = true;
+    return control
+  }
+
+  export function initTrackBallControl(
+    camera: THREE.Camera,
+    renderer: THREE.WebGLRenderer
+  ): TrackballControls {
+    const control =  new TrackballControls(camera, renderer.domElement);
+    control.handleResize();
     return control
   }
 }
