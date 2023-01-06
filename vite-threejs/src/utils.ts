@@ -24,9 +24,10 @@ export namespace Util {
 
   export function initCamera(
     size: Size,
-    fov: number = 50
+    fov: number = 50,
+    far: number = 1000,
   ): THREE.PerspectiveCamera {
-    return new THREE.PerspectiveCamera(fov, size.aspect, 0.1, 1000);
+    return new THREE.PerspectiveCamera(fov, size.aspect, 0.1, far);
   }
 
   export function addAxesHelper(

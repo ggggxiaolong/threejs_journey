@@ -13,4 +13,5 @@ import './style.css'
 // import "./15-pdb"
 // import "./16-extrude";
 // import "./17-text";
-import "./18-texture";
+// import "./18-texture";
+import "./19-dynamic";
