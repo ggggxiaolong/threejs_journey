@@ -11,4 +11,5 @@ import './style.css'
 // import "./10-clipping"
 // import "./12-skybox";
 // import "./15-pdb"
-import "./16-extrude";
+// import "./16-extrude";
+import "./17-text";

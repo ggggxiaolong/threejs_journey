@@ -99,7 +99,7 @@ function addMesh() {
   const mesh2 = new THREE.Mesh(randomGeometry, material2);
   scene.add(mesh2);
 
-  const material3 = [material, material2];
+  const material3 = [material, material2]; 
   const extrudeSetting3: THREE.ExtrudeGeometryOptions = {
     depth: 20,
     steps: 1,
