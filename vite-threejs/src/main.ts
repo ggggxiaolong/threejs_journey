@@ -14,4 +14,5 @@ import './style.css'
 // import "./16-extrude";
 // import "./17-text";
 // import "./18-texture";
-import "./19-dynamic";
+// import "./19-dynamic";
+import "./20-morgh"
