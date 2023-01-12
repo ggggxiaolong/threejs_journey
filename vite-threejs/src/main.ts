@@ -15,4 +15,5 @@ import './style.css'
 // import "./17-text";
 // import "./18-texture";
 // import "./19-dynamic";
-import "./20-morgh"
+// import "./20-morgh"
+import "./21-temple";
