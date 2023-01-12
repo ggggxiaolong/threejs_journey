@@ -18,4 +18,5 @@ import './style.css'
 // import "./20-morgh"
 // import "./21-temple";
 // import "./22-points";
-import "./23-shaders"
+// import "./23-shaders"
+import "./24-shader-simple"
