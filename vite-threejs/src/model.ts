@@ -33,3 +33,38 @@ export class Size {
     this.onChange = onChange;
   }
 }
+
+export class Mouse {
+  x: number;
+  y: number;
+  offsetX: number = 0;
+  offsetY: number = 0;
+  private static _instance: Mouse;
+
+  private constructor(){
+    this.x = 0;
+    this.y = 0;
+    this.offsetX = 0;
+    this.offsetY = 0;
+    Mouse._instance = this;
+    window.addEventListener("pointermove", function(event){
+      Mouse._instance.onMove(event);
+    })
+  }
+
+  public static getInstance(): Mouse {
+    return Mouse._instance || (this._instance = new this());
+  }
+
+  public updateOffset(offsetX: number, offsetY: number){
+    this.offsetX = offsetX;
+    this.offsetY = offsetY;
+  }
+
+  private onMove(event: PointerEvent){
+    // console.log(event);
+    if ( event.isPrimary === false ) return;
+    this.x = event.clientX - this.offsetX;
+    this.y = event.clientY - this.offsetY;
+  }
+}

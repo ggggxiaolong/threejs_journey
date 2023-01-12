@@ -16,4 +16,6 @@ import './style.css'
 // import "./18-texture";
 // import "./19-dynamic";
 // import "./20-morgh"
-import "./21-temple";
+// import "./21-temple";
+import "./22-points";
+// import "./23-shaders"
