@@ -19,4 +19,5 @@ import './style.css'
 // import "./21-temple";
 // import "./22-points";
 // import "./23-shaders"
-import "./24-shader-simple"
+// import "./24-shader-simple"
+import "./blender-demo1"
