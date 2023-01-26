@@ -21,4 +21,7 @@ import './style.css'
 // import "./23-shaders"
 // import "./24-shader-simple"
 // import "./blender-demo1"
-import "./blender-demo2"
+// import "./blender-demo2"
+// import "./blender-city"
+// import "./blender-demo2_ani"
+import "./blender-class1"
