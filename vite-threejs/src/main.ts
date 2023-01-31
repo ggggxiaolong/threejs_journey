@@ -24,4 +24,5 @@ import './style.css'
 // import "./blender-demo2"
 // import "./blender-city"
 // import "./blender-demo2_ani"
-import "./blender-class1"
+// import "./blender-class1"
+import "./blender-carbin"
