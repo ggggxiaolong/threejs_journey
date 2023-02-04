@@ -25,4 +25,5 @@ import './style.css'
 // import "./blender-city"
 // import "./blender-demo2_ani"
 // import "./blender-class1"
-import "./blender-carbin"
+// import "./blender-carbin"
+import "./25-shader_points_raycaster"
