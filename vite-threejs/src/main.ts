@@ -26,4 +26,5 @@ import './style.css'
 // import "./blender-demo2_ani"
 // import "./blender-class1"
 // import "./blender-carbin"
-import "./25-shader_points_raycaster"
+// import "./25-shader_points_raycaster"
+import "./26-shader-filmPass-bloomPass"
