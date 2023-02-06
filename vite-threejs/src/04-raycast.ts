@@ -70,6 +70,7 @@ function addMesh() {
 function render() {
   renderer.render(scene, camer);
   raycaste.setFromCamera(mouse, camer);
+  control.update()
   let objects = raycaste.intersectObject(mesh);
   if (objects.length > 0) {
     const instanceId = objects[0].instanceId!!;

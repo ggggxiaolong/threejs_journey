@@ -73,7 +73,7 @@ function init() {
       console.log(face);
       const expression = Object.keys(face.morphTargetDictionary);
       for (let i = 0; i < expression.length; i++) {
-        gui.add(face.morphTargetInfluences, i, 0, 1, 0.1).name(expression[i]);
+        gui.add(face.morphTargetInfluences, `${i}`, 0, 1, 0.1).name(expression[i]);
       }
     }
     render();

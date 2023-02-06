@@ -8,6 +8,7 @@ import {
   CSS2DRenderer,
   CSS2DObject,
 } from "three/examples/jsm/renderers/CSS2DRenderer";
+import { GUI } from "lil-gui";
 
 const size = Size.getInstance();
 const scene = new THREE.Scene();
@@ -18,6 +19,10 @@ const loader = new GLTFLoader();
 const labelRenderer = new CSS2DRenderer();
 const MODEL_HEIGHT = 8;
 const MODEL_WIDTH = 12;
+const group = new THREE.Group();
+let cabinMesh: THREE.Group;
+const gui = new GUI();
+const param = { size: 5 };
 
 init();
 render();
@@ -42,20 +47,29 @@ function init() {
   scene.add(envLight);
   loader.load("/models/carbin2.glb", function (glb) {
     console.log(glb.scene);
-    showCabin(glb.scene, 5)
+    cabinMesh = glb.scene;
+    showCabin(param.size)
+    gui.add(param, "size", 1, 300, 1).onChange(function () {
+      showCabin(param.size)
+    });
   });
+  scene.add(group)
 }
 
-function showCabin(mesh: THREE.Group, size: number) {
-  const group = new THREE.Group();
-  const x = Math.floor(Math.sqrt(size));
-  const y = x * x == size ? x : x + 1;
+function showCabin(size: number) {
+  while (group.children.length > 0) {
+    const mesh = group.children[0];
+    mesh.parent?.remove(mesh);
+  }
+  const y = Math.ceil(Math.sqrt(size));
+  const x = y * (y - 1) >= size ? y - 1 : y;
   const maxCount = x * y;
+  console.log(`${x},${y}`)
   let count = 1;
   for (let i = 0; i < x; i++) {
     for (let j = 0; j < y; j++) {
       if (size > maxCount - count) {
-        const cabin = mesh.clone();
+        const cabin = cabinMesh.clone();
         cabin.position.set(i * MODEL_WIDTH, 0, j * MODEL_HEIGHT);
         group.add(cabin)
         const textElement = document.createElement("div");
@@ -66,16 +80,16 @@ function showCabin(mesh: THREE.Group, size: number) {
         label.position.set(i * MODEL_WIDTH + 3, 3, j * MODEL_HEIGHT + 1);
         group.add(label);
       } else {
-        const cabin = mesh.children[2].clone();
+        const cabin = cabinMesh.children[2].clone();
         cabin.position.set(i * MODEL_WIDTH, 0, j * MODEL_HEIGHT);
         group.add(cabin)
       }
       count += 1;
     }
   }
-  group.position.x -= x * MODEL_WIDTH / 2;
-  group.position.z -= y * MODEL_HEIGHT / 2;
-  scene.add(group)
+  group.position.x = -x * MODEL_WIDTH / 2;
+  group.position.z = -y * MODEL_HEIGHT / 2;
+  camera.position.set(0, x * 5, y * 8);
 }
 
 function render() {

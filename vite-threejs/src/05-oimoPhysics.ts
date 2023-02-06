@@ -8,7 +8,7 @@ let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
 let control: OrbitControls;
 let renderer: THREE.WebGLRenderer;
-let axiesHelper: THREE.AxesHelper;
+// let axiesHelper: THREE.AxesHelper;
 let boxes: THREE.InstancedMesh;
 let spheres: THREE.InstancedMesh;
 let light: THREE.DirectionalLight;
@@ -30,7 +30,7 @@ function init() {
   camera.position.set(4, 4, 4);
   scene.add(camera);
 
-  axiesHelper = new THREE.AxesHelper(1);
+  // axiesHelper = new THREE.AxesHelper(1);
   //   scene.add(axiesHelper);
 
   renderer = new THREE.WebGLRenderer();
