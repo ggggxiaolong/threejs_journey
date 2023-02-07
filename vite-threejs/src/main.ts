@@ -27,4 +27,5 @@ import './style.css'
 // import "./blender-class1"
 // import "./blender-carbin"
 // import "./25-shader_points_raycaster"
-import "./26-shader-filmPass-bloomPass"
+// import "./26-shader-filmPass-bloomPass"
+import "./27-glitchPass"
