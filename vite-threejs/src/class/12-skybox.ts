@@ -25,7 +25,7 @@ function init() {
   renderer.outputEncoding = THREE.sRGBEncoding;
 
   const texture = loader
-    .setPath("/textures/cube/pisa/")
+    .setPath("./textures/cube/pisa/")
     .load(["px.png", "nx.png", "py.png", "ny.png", "pz.png", "nz.png"]);
   scene.background = texture;
   // scene.environment = texture;

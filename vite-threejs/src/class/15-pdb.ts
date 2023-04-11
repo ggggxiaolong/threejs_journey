@@ -49,7 +49,7 @@ function init() {
   light2.position.set(-1, -1, 1);
   scene.add(light2);
   scene.add(group);
-  loader.setPath("/models/pdb/")
+  loader.setPath("./models/pdb/")
 
   const MOLECULES = {
         'Ethanol': 'ethanol.pdb',

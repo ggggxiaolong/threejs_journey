@@ -31,7 +31,7 @@ function init() {
     Util.onResize(size, camera, renderer);
   });
   const deccoder = new DRACOLoader();
-  deccoder.setDecoderPath("/gltf/");
+  deccoder.setDecoderPath("./gltf/");
   loader = new GLTFLoader();
   loader.setDRACOLoader(deccoder);
   loader.load("./models/LittlestTokyo.glb", function (model) {

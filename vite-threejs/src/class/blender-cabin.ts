@@ -30,7 +30,7 @@ render();
 
 function init() {
   const deccoder = new DRACOLoader();
-  deccoder.setDecoderPath("/gltf/");
+  deccoder.setDecoderPath("./gltf/");
   loader.setDRACOLoader(deccoder);
   labelRenderer.setSize(size.width, size.height);
   labelRenderer.domElement.style.position = "absolute";
