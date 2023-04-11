@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { AmbientLight } from "three";
 import { Size } from "./model";
 import { Util } from "./utils";
@@ -18,7 +19,7 @@ const control = Util.initControl(camera, renderer);
 const loader = new GLTFLoader();
 const labelRenderer = new CSS2DRenderer();
 const MODEL_HEIGHT = 8;
-const MODEL_WIDTH = 12;
+const MODEL_WIDTH = 16;
 const group = new THREE.Group();
 let cabinMesh: THREE.Group;
 const gui = new GUI();
@@ -28,6 +29,9 @@ init();
 render();
 
 function init() {
+  const deccoder = new DRACOLoader();
+  deccoder.setDecoderPath("/gltf/");
+  loader.setDRACOLoader(deccoder);
   labelRenderer.setSize(size.width, size.height);
   labelRenderer.domElement.style.position = "absolute";
   labelRenderer.domElement.style.top = "0px";
@@ -39,19 +43,27 @@ function init() {
     Util.onResize(size, camera, renderer);
     labelRenderer.setSize(size.width, size.height);
   });
-  scene.background = new THREE.Color(0xcccccc);
-  renderer.outputEncoding = THREE.sRGBEncoding;
+  scene.background = new THREE.Color(0x2f2f2f);
+  // renderer.outputEncoding = THREE.sRGBEncoding;
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
   scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
-  const envLight = new AmbientLight(0xffffff, 0.4);
+  const envLight = new AmbientLight(0xffffff, 0.2);
   scene.add(envLight);
-  loader.load("/models/carbin2.glb", function (glb) {
+  // const color = 0.65;
+  loader.load("/models/cabin_001.glb", function (glb) {
     console.log(glb.scene);
     cabinMesh = glb.scene;
+    cabinMesh.rotation.y = - Math.PI / 2;
+    // cabinMesh.traverse(function(mesh){
+    //   if(mesh instanceof THREE.Mesh){
+    //     mesh.material.color.setRGB( color, color, color )
+    //   }
+    // })
     showCabin(param.size)
     gui.add(param, "size", 1, 300, 1).onChange(function () {
       showCabin(param.size)
     });
+    // scene.add(cabinMesh)
   });
   scene.add(group)
 }
@@ -80,21 +92,21 @@ function showCabin(size: number) {
         label.position.set(i * MODEL_WIDTH + 3, 3, j * MODEL_HEIGHT + 1);
         group.add(label);
       } else {
-        const cabin = cabinMesh.children[2].clone();
-        cabin.position.set(i * MODEL_WIDTH, 0, j * MODEL_HEIGHT);
-        group.add(cabin)
+        // const cabin = cabinMesh.children[2].clone();
+        // cabin.position.set(i * MODEL_WIDTH, 0, j * MODEL_HEIGHT);
+        // group.add(cabin)
       }
       count += 1;
     }
   }
-  group.position.x = -x * MODEL_WIDTH / 2;
-  group.position.z = -y * MODEL_HEIGHT / 2;
+  group.position.x = -x * MODEL_WIDTH / 2 + MODEL_WIDTH / 2;
+  group.position.z = -y * MODEL_HEIGHT / 2 + MODEL_HEIGHT / 2;
   camera.position.set(0, x * 5, y * 8);
 }
 
 function render() {
   renderer.render(scene, camera);
-  labelRenderer.render(scene, camera);
+  // labelRenderer.render(scene, camera);
   control.update();
   requestAnimationFrame(render);
 }

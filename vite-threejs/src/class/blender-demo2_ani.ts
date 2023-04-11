@@ -10,8 +10,8 @@ const camera = Util.initCamera(size);
 const renderer = Util.initRenderer(size);
 const control = Util.initControl(camera, renderer);
 const loader = new GLTFLoader();
-let mixer: THREE.AnimationMixer;
-const clock = new THREE.Clock()
+// let mixer: THREE.AnimationMixer;
+// const clock = new THREE.Clock()
 
 init();
 // render();
@@ -51,12 +51,12 @@ function init() {
   loader.load("/models/demo2_ani.glb", function (glb) {
     console.log(glb);
     scene.add(glb.scene);
-    mixer = new THREE.AnimationMixer(glb.scene);
-    const animation = glb.animations[0];
+    // mixer = new THREE.AnimationMixer(glb.scene);
+    // const animation = glb.animations[0];
     
-    const action = mixer.clipAction(animation);
-    console.log(action);
-    action.play()
+    // const action = mixer.clipAction(animation);
+    // console.log(action);
+    // action.play()
     render()
   });
 }
@@ -64,6 +64,6 @@ function init() {
 function render() {
   renderer.render(scene, camera);
   control.update();
-  mixer.update(clock.getDelta())
+  // mixer.update(clock.getDelta())
   requestAnimationFrame(render);
 }

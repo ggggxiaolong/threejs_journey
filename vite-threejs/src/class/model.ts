@@ -39,6 +39,7 @@ export class Mouse {
   y: number;
   offsetX: number = 0;
   offsetY: number = 0;
+  private onChange: () => void;
   private static _instance: Mouse;
 
   private constructor(){
@@ -46,14 +47,20 @@ export class Mouse {
     this.y = 0;
     this.offsetX = 0;
     this.offsetY = 0;
+    this.onChange = function(){}
     Mouse._instance = this;
     window.addEventListener("pointermove", function(event){
       Mouse._instance.onMove(event);
+      Mouse._instance.onChange();
     })
   }
 
   public static getInstance(): Mouse {
     return Mouse._instance || (this._instance = new this());
+  }
+
+  public setOnChange(onChange: () => void) {
+    this.onChange = onChange;
   }
 
   public updateOffset(offsetX: number, offsetY: number){

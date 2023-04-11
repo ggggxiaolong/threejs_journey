@@ -17,15 +17,15 @@ const amount = 10;
 const count = Math.pow(10, 3);
 const white = new THREE.Color(0xffffff);
 const tempColor = new THREE.Color();
-let coloredCount = 0;
-let counterElement: Element | null;
+// let coloredCount = 0;
+// let counterElement: Element | null;
 
 init();
 addMesh();
 render();
 
 function init() {
-  counterElement = document.querySelector("div.count");
+  // counterElement = document.querySelector("div.count");
   mouse = new THREE.Vector2(1, 1);
   raycaste = new THREE.Raycaster();
   scene = new THREE.Scene();
@@ -78,8 +78,8 @@ function render() {
     if (tempColor.equals(white)) {
       mesh.setColorAt(instanceId, tempColor.setHex(Math.random() * 0xffffff));
       mesh.instanceColor!!.needsUpdate = true;
-      coloredCount += 1;
-      counterElement!!.innerHTML = `${coloredCount} / ${count}`;
+      // coloredCount += 1;
+      // counterElement?.innerHTML = `${coloredCount} / ${count}`;
     }
   }
 
