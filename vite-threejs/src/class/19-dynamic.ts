@@ -22,7 +22,7 @@ function init() {
     Util.onResize(size, camera, renderer);
   });
   control.handleResize();
-  const texture = loader.load("/textures/water.jpg");
+  const texture = loader.load("./textures/water.jpg");
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.set(5, 5);

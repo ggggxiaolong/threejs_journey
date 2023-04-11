@@ -76,7 +76,7 @@ function init() {
     uniforms: {
       color: { value: new THREE.Color(0xffffff) },
       pointTexture: {
-        value: new THREE.TextureLoader().load("/textures/sprites/disc.png"),
+        value: new THREE.TextureLoader().load("./textures/sprites/disc.png"),
       },
     },
   });

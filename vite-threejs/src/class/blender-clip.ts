@@ -49,7 +49,7 @@ function init() {
   scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.01).texture;
   const envLight = new AmbientLight(0xffffff, 0.1);
   scene.add(envLight);
-  loader.load("/models/cabin02.glb", function (glb) {
+  loader.load("./models/cabin02.glb", function (glb) {
     console.log(glb);
     mixer = new THREE.AnimationMixer(glb.scene);
     const animation = glb.animations[0];

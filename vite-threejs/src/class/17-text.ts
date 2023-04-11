@@ -49,7 +49,7 @@ function init() {
   scene.fog = new Fog(0x000000, 250, 1000);
 
   const fontLoader = new FontLoader();
-  fontLoader.load("/fonts/helvetiker_regular.typeface.json", function (font) {
+  fontLoader.load("./fonts/helvetiker_regular.typeface.json", function (font) {
     const geometry = new TextGeometry("Three.js", {
       font: font,
       size: 50,

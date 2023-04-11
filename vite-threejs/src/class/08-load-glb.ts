@@ -54,7 +54,7 @@ function init() {
   //   const camerHelper = new THREE.CameraHelper(dirLight.shadow.camera);
   //   scene.add(camerHelper);
 
-  loader.load("/models/Soldier.glb", function (model: GLTF) {
+  loader.load("./models/Soldier.glb", function (model: GLTF) {
     model.scene.rotation.y = Math.PI;
     model.scene.position.set(0, -1, 0);
     const animation = model.animations[1];

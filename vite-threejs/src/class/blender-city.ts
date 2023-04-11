@@ -46,7 +46,7 @@ function init() {
   scene.add(light2);
 //   const helper2 = new THREE.SpotLightHelper(light2);
 //   scene.add(helper2);
-  loader.load("/models/city-export.gltf", function (glb) {
+  loader.load("./models/city-export.gltf", function (glb) {
     console.log(glb);
     glb.scene.scale.set(0.1,0.1,0.1)
     scene.add(glb.scene);

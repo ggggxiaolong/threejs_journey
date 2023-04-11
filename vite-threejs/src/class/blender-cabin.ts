@@ -50,7 +50,7 @@ function init() {
   const envLight = new AmbientLight(0xffffff, 0.2);
   scene.add(envLight);
   // const color = 0.65;
-  loader.load("/models/cabin_001.glb", function (glb) {
+  loader.load("./models/cabin_001.glb", function (glb) {
     console.log(glb.scene);
     cabinMesh = glb.scene;
     cabinMesh.rotation.y = - Math.PI / 2;

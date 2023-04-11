@@ -33,7 +33,7 @@ function init() {
   size.onResize(() => {
     Util.onResize(size, camera, renderer);
   });
-  loader.load("/gltf/RobotExpressive/RobotExpressive.glb", function (glb) {
+  loader.load("./gltf/RobotExpressive/RobotExpressive.glb", function (glb) {
     console.log(glb)
     scene.add(glb.scene);
     mixer = new THREE.AnimationMixer(glb.scene);

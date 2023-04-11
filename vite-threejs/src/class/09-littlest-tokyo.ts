@@ -34,7 +34,7 @@ function init() {
   deccoder.setDecoderPath("/gltf/");
   loader = new GLTFLoader();
   loader.setDRACOLoader(deccoder);
-  loader.load("/models/LittlestTokyo.glb", function (model) {
+  loader.load("./models/LittlestTokyo.glb", function (model) {
     model.scene.scale.set(0.01, 0.01, 0.01)
     // model.scene.rotation.y = Math.PI/3;
     scene.add(model.scene);

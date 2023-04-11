@@ -41,7 +41,7 @@ function init() {
   water = new Water(new THREE.PlaneGeometry(10000, 10000), {
     textureHeight: 512,
     textureWidth: 512,
-    waterNormals: loader.load("/textures/waternormals.jpg", function (texture) {
+    waterNormals: loader.load("./textures/waternormals.jpg", function (texture) {
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
     }),

@@ -48,7 +48,7 @@ function init() {
   scene.add(light2);
 //   const helper2 = new THREE.SpotLightHelper(light2);
 //   scene.add(helper2);
-  loader.load("/models/class1.glb", function (glb) {
+  loader.load("./models/class1.glb", function (glb) {
     console.log(glb);
     glb.scene.position.z = -10;
     scene.add(glb.scene);

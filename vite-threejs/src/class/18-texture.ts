@@ -26,7 +26,7 @@ function init() {
   renderer.outputEncoding = sRGBEncoding;
 
   const loader = new TextureLoader();
-  const texture = loader.load("/textures/crate.gif");
+  const texture = loader.load("./textures/crate.gif");
   const material = new MeshBasicMaterial({ map: texture });
   mesh = new Mesh(new BoxGeometry(200, 200, 200), material);
   scene.add(mesh);
