@@ -8,3 +8,8 @@ declare module "three/examples/jsm/physics/OimoPhysics" {
     setMeshPosition(mesh: Mesh, position: Vector3, index: number = 0);
   }
 }
+
+declare global {
+  interface Window { Ammo: Ammo; }
+}
+window.Ammo = Ammo;

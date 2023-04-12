@@ -35,6 +35,7 @@ export const NAMES: Map<string, string> = new Map([
     ["blender-class1", "blender-class1"],
     ["blender-cabin", "blender-cabin"],
     ["blender-clip", "blender-clip"],
+    ["ammo-first", "29-ammo-first"],
 ])
 // console.log(path);
 if(query){
