@@ -35,7 +35,7 @@ function init() {
     composer.setSize(size.width, size.height);
 
     mouse.setOnChange(function () {
-        raycaster.setFromCamera({ x: (mouse.x / size.width) * 2 - 1, y: 1 - (mouse.y / size.height) * 2 }, camera);
+        raycaster.setFromCamera(new THREE.Vector2(mouse.x / size.width, 1 - (mouse.y / size.height) * 2 ), camera);
         const objs = raycaster.intersectObject(scene, true);
         if (objs.length > 0) {
             outlinePass.selectedObjects = [objs[0].object];

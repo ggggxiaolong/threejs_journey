@@ -8,7 +8,7 @@ const size = Size.getInstance();
 const scene = new THREE.Scene();
 const renderer = Util.initRenderer(size);
 const camera = new THREE.PerspectiveCamera(55, size.aspect, 2, 2000);
-const stats = Stats();
+const stats = new Stats();
 let material: THREE.PointsMaterial;
 const clock = new THREE.Clock();
 const gui = new GUI();

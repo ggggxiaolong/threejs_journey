@@ -7,7 +7,7 @@ import {
 } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { Size } from "./model";
 import { Util } from "./utils";
-import {GUI} from 'lil-gui';
+import { GUI } from 'lil-gui';
 
 const size = Size.getInstance();
 const scene = new THREE.Scene();
@@ -52,34 +52,34 @@ function init() {
   loader.setPath("./models/pdb/")
 
   const MOLECULES = {
-        'Ethanol': 'ethanol.pdb',
-				'Aspirin': 'aspirin.pdb',
-				'Caffeine': 'caffeine.pdb',
-				'Nicotine': 'nicotine.pdb',
-				'LSD': 'lsd.pdb',
-				'Cocaine': 'cocaine.pdb',
-				'Cholesterol': 'cholesterol.pdb',
-				'Lycopene': 'lycopene.pdb',
-				'Glucose': 'glucose.pdb',
-				'Aluminium oxide': 'Al2O3.pdb',
-				'Cubane': 'cubane.pdb',
-				'Copper': 'cu.pdb',
-				'Fluorite': 'caf2.pdb',
-				'Salt': 'nacl.pdb',
-				'YBCO superconductor': 'ybco.pdb',
-				'Buckyball': 'buckyball.pdb',
-				'Graphite': 'graphite.pdb'
+    'Ethanol': 'ethanol.pdb',
+    'Aspirin': 'aspirin.pdb',
+    'Caffeine': 'caffeine.pdb',
+    'Nicotine': 'nicotine.pdb',
+    'LSD': 'lsd.pdb',
+    'Cocaine': 'cocaine.pdb',
+    'Cholesterol': 'cholesterol.pdb',
+    'Lycopene': 'lycopene.pdb',
+    'Glucose': 'glucose.pdb',
+    'Aluminium oxide': 'Al2O3.pdb',
+    'Cubane': 'cubane.pdb',
+    'Copper': 'cu.pdb',
+    'Fluorite': 'caf2.pdb',
+    'Salt': 'nacl.pdb',
+    'YBCO superconductor': 'ybco.pdb',
+    'Buckyball': 'buckyball.pdb',
+    'Graphite': 'graphite.pdb'
   }
   const params = {
     molecule: 'caffeine.pdb'
   }
-  gui.add( params, 'molecule', MOLECULES ).onChange( loadModel );
+  gui.add(params, 'molecule', MOLECULES).onChange(loadModel);
   loadModel("caffeine.pdb");
 
 }
 
 function loadModel(path: string) {
-  while (group.children.length > 0){
+  while (group.children.length > 0) {
     const mesh = group.children[0];
     mesh.parent?.remove(mesh);
   }
@@ -89,8 +89,8 @@ function loadModel(path: string) {
     const geometry = new THREE.SphereGeometry(0.2);
     const boxGeometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
     const material = new THREE.MeshPhongMaterial({ color: 0xffffff });
-    const positions = pdb.geometryAtoms.attributes["position"];
-    const colors = pdb.geometryAtoms.attributes["color"];
+    const positions: THREE.BufferAttribute = pdb.geometryAtoms.attributes["position"] as THREE.BufferAttribute;
+    const colors: THREE.BufferAttribute = pdb.geometryAtoms.attributes["color"] as THREE.BufferAttribute;
     const atomMesh = new THREE.InstancedMesh(
       geometry,
       material,
@@ -114,7 +114,7 @@ function loadModel(path: string) {
       group.add(label);
     }
     group.add(atomMesh);
-    const bondsPositions = pdb.geometryBonds.attributes["position"];
+    const bondsPositions = pdb.geometryBonds.attributes["position"] as THREE.BufferAttribute;
     for (let i = 0; i < bondsPositions.count; i += 2) {
       position.set(
         bondsPositions.getX(i),

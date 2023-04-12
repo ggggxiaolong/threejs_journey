@@ -93,11 +93,11 @@ function render() {
   if (intersections.length > 0){
     if (selectPoint != intersections[0].index){
         selectPoint = intersections[0].index;
-        geometry.getAttribute("size")!.setX(selectPoint!!,PARTICLE_SIZE * 1.25);
+        (geometry.getAttribute("size") as THREE.BufferAttribute).setX(selectPoint!!,PARTICLE_SIZE * 1.25);
         geometry.getAttribute("size").needsUpdate = true;
     }
   } else if(selectPoint){
-    geometry.getAttribute("size")!.setX(selectPoint,PARTICLE_SIZE);
+    (geometry.getAttribute("size") as THREE.BufferAttribute).setX(selectPoint,PARTICLE_SIZE);
     geometry.getAttribute("size").needsUpdate = true;
     selectPoint = undefined;
   }
