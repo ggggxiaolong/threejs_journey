@@ -6,6 +6,7 @@ import { Size } from "./model";
 import { Util } from "./utils";
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment';
 import {
+  CSS2DObject,
   CSS2DRenderer,
 } from "three/examples/jsm/renderers/CSS2DRenderer";
 
@@ -20,11 +21,11 @@ const clock = new THREE.Clock();
 // const mouse = Mouse.getInstance();
 // const MODEL_HEIGHT = 8;
 // const MODEL_WIDTH = 16;
-// const group = new THREE.Group();
+const group = new THREE.Group();
 let cabinMesh: THREE.Group;
 let mixer: THREE.AnimationMixer | null = null;
-// const gui = new GUI();
-// const param = { size: 1 };
+let isLoaded = false;
+let isRendered = false;
 
 init();
 render();
@@ -49,6 +50,7 @@ function init() {
   scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.01).texture;
   const envLight = new AmbientLight(0xffffff, 0.1);
   scene.add(envLight);
+  scene.add(group);
   loader.load("./models/cabin02.glb", function (glb) {
     console.log(glb);
     mixer = new THREE.AnimationMixer(glb.scene);
@@ -62,29 +64,48 @@ function init() {
     animate2.repetitions = 1;
     animate2.clampWhenFinished = true;
     animate2.play();
-
     cabinMesh = glb.scene;
-    cabinMesh.rotation.y = -Math.PI / 2;  
-    // // cabinMesh.traverse(function(mesh){
-    // //   if(mesh instanceof THREE.Mesh){
-    // //     mesh.material.color.setRGB( color, color, color )
-    // //   }
-    // // })
-    // showCabin(param.size)
-    // gui.add(param, "size", 1, 300, 1).onChange(function () {
-    //   showCabin(param.size)
-    // });
-    // scene.add(cabinMesh)
-    scene.add(cabinMesh)
+    cabinMesh.rotation.y = -Math.PI / 2;
+    scene.add(cabinMesh);
+    const position = new THREE.Vector3();
+    mixer?.addEventListener('finished', function (e) {
+      if (e.action === animate) {
+        scene.updateMatrixWorld(true);
+        scene.traverse(obj => {
+          if (obj.name.startsWith('heap') || obj.name.startsWith('pcs') || obj.name.startsWith('air') || obj.name.startsWith('fire')) {
+            const pointElement = document.createElement("div");
+            pointElement.className = "hot_point";
+            position.setFromMatrixPosition(obj.matrixWorld);
+            const label = new CSS2DObject(pointElement);
+            label.position.copy(position);
+            group.add(label);
+          }
+        });
+        if (!control.hasEventListener('change', onControlUpdate)) {
+          control.addEventListener('change', onControlUpdate)
+        }
+        isLoaded = true;
+      }
+    });
   });
   // scene.add(group)
-  
+
 }
 
 function render() {
-  renderer.render(scene, camera); 
+  renderer.render(scene, camera);
   labelRenderer.render(scene, camera);
   control.update();
   mixer?.update(clock.getDelta());
-  requestAnimationFrame(render);
+  if (!isRendered) {
+    requestAnimationFrame(render);
+  }
+  if (isLoaded) {
+    isRendered = true;
+  }
+}
+
+function onControlUpdate() {
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
 }

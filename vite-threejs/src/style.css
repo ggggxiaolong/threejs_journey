@@ -87,7 +87,11 @@ div.count {
   padding: 20px 30px;
   border-bottom: 3px solid #2b3035;
 }
-/* .table-dark { */
-/* color: #fff;
-  background-color: #343a40; */
-/* } */
+.hot_point {
+  position: absolute;
+  background: #00dfaa;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  pointer-events: all;
+}

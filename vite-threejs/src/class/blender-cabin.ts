@@ -24,6 +24,8 @@ const group = new THREE.Group();
 let cabinMesh: THREE.Group;
 const gui = new GUI();
 const param = { size: 5 };
+let isLoaded = false;
+let isRendered = false;
 
 init();
 render();
@@ -65,10 +67,16 @@ function init() {
     });
     // scene.add(cabinMesh)
   });
-  scene.add(group)
+  scene.add(group);
 }
 
 function showCabin(size: number) {
+  console.log("showCabin");
+  isLoaded = false;
+  if (isRendered) {
+    isRendered = false;
+    render();
+  }
   while (group.children.length > 0) {
     const mesh = group.children[0];
     mesh.parent?.remove(mesh);
@@ -102,11 +110,23 @@ function showCabin(size: number) {
   group.position.x = -x * MODEL_WIDTH / 2 + MODEL_WIDTH / 2;
   group.position.z = -y * MODEL_HEIGHT / 2 + MODEL_HEIGHT / 2;
   camera.position.set(0, x * 5, y * 8);
+  isLoaded = true;
 }
 
 function render() {
   renderer.render(scene, camera);
   // labelRenderer.render(scene, camera);
   control.update();
-  requestAnimationFrame(render);
+  if (!isRendered) {
+    requestAnimationFrame(render);
+  } else if (!control.hasEventListener("change", controlUpdate)) {
+    control.addEventListener("change", controlUpdate)
+  }
+  if (isLoaded) {
+    isRendered = true;
+  }
+}
+
+function controlUpdate() {
+  renderer.render(scene, camera);
 }
