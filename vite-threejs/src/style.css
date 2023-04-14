@@ -95,3 +95,19 @@ div.count {
   border-radius: 50%;
   pointer-events: all;
 }
+
+#speedometer {
+  color: #ffffff;
+  background-color: #990000;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  padding: 5px;
+}
+#info {
+  position: absolute;
+  top: 5px;
+  width: 100%;
+  text-align: center;
+  white-space:pre-line;
+}

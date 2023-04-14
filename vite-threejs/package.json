@@ -13,7 +13,7 @@
     "@types/node": "^18.15.11",
     "@types/three": "^0.150.1",
     "lil-gui": "^0.17.0",
-    "typescript": "^4.9.5",
+    "typescript": "^5.0.4",
     "vite": "^4.2.1",
     "vite-plugin-glsl": "^1.1.2"
   },
